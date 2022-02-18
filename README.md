@@ -1,4 +1,4 @@
-##Copy .env.example: 
+## Copy .env.example: 
 
 ```php 
  php -r "file_exists('.env') || copy('.env.example', '.env');"
