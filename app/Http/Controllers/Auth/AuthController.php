@@ -62,7 +62,7 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         return ResponseJson::responseJson(
-            new UserResource(auth()->user())
+            new UserResource(auth()->user()?->load('roles'))
         );
     }
 

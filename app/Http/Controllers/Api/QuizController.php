@@ -6,10 +6,21 @@ use App\Helpers\ResponseJson;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
+use App\Http\Resources\QuizResource;
+use App\Services\QuizService;
 use Illuminate\Http\JsonResponse;
 
 class QuizController extends Controller
 {
+    /**
+     * QuizController constructor.
+     *
+     * @param QuizService $service
+     */
+    public function __construct(private QuizService $service)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,13 +34,18 @@ class QuizController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreQuizRequest  $request
+     * @param \App\Http\Requests\StoreQuizRequest $request
+     *
+     * @throws \Spatie\DataTransferObject\Exceptions\UnknownProperties
      *
      * @return JsonResponse
      */
     public function store(StoreQuizRequest $request): JsonResponse
     {
-        //
+        $payload = $request->validated();
+        $payload['user_id'] = auth()->id();
+
+        return ResponseJson::responseJson($this->service->store($payload));
     }
 
     /**
@@ -41,7 +57,7 @@ class QuizController extends Controller
      */
     public function show(string $slug): JsonResponse
     {
-        //
+        return ResponseJson::responseJson(new QuizResource($this->service->show($slug)));
     }
 
     /**
@@ -54,7 +70,7 @@ class QuizController extends Controller
      */
     public function update(UpdateQuizRequest $request, int $id): JsonResponse
     {
-        //
+        return ResponseJson::responseJson($this->service->update($request->validated(), $id));
     }
 
     /**

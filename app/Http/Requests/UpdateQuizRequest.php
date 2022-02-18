@@ -24,7 +24,7 @@ class UpdateQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'string|required|min:5|max:255|unique:quizzes,title',
         ];
     }
 }
