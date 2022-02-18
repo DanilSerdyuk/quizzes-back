@@ -1,8 +1,9 @@
-## Copy .env.example: 
+## Copy .env.example or copy it manually: 
 
 ```php 
  php -r "file_exists('.env') || copy('.env.example', '.env');"
  ```
+
 ### Run via [make](https://askubuntu.com/a/1363822):
 1. Run docker:`make build`
    
@@ -20,3 +21,10 @@
 5. `docker-compose exec -T app php artisan jwt:secret`
 
 6. `docker-compose exec -T app php artisan queue:work --tries=3`
+
+
+### Mailtrap credits: 
+
+email: `work.serdyuk@gmail.com`
+
+password: `quizzesdemo`

@@ -15,4 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('quizzes', \App\Http\Controllers\Api\QuizController::class);
+    Route::post('quizzes/assignee', [\App\Http\Controllers\Api\QuizController::class, 'assignee']);
+    Route::apiResource('questions', \App\Http\Controllers\Api\QuestionController::class)
+        ->only(['store', 'update', 'destroy']);
 });

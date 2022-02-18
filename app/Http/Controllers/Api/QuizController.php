@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseJson;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssigneeQuizRequest;
 use App\Http\Requests\StoreQuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Services\QuizService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class QuizController extends Controller
 {
@@ -24,11 +26,15 @@ class QuizController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        //
+        return ResponseJson::responseJson(
+            $this->service->get($request->get('perPage', 10), $request->get('page', 1))
+        );
     }
 
     /**
@@ -63,8 +69,10 @@ class QuizController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateQuizRequest  $request
-     * @param  int                                   $id
+     * @param \App\Http\Requests\UpdateQuizRequest $request
+     * @param int                                  $id
+     *
+     * @throws \Spatie\DataTransferObject\Exceptions\UnknownProperties
      *
      * @return JsonResponse
      */
@@ -82,6 +90,24 @@ class QuizController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        $this->service->delete($id);
+
         return ResponseJson::responseJson(code: 204);
+    }
+
+    /**
+     * Assignee user on test
+     *
+     * @param  AssigneeQuizRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function assignee(AssigneeQuizRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $this->service->assigned($validated);
+
+        return ResponseJson::responseJson(code: 202);
     }
 }
