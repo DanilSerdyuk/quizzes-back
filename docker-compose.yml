@@ -1,0 +1,72 @@
+version: '3.8'
+
+volumes:
+  quiz-redis:
+  quiz-mysql:
+    driver: local
+
+networks:
+  quiz:
+    driver: bridge
+
+services:
+  app:
+    build:
+      context: $PWD/docker/app
+      dockerfile: app.dockerfile
+      args:
+        user: ${DEFAULT_USER:-admin} # whoami
+        gid: ${DEFAULT_GROUP:-admin} # id -g
+        uid: ${DEFAULT_USER_ID:-1000} # id -u
+    restart: always
+    container_name: app
+    depends_on:
+      - mysql
+    volumes:
+      - $PWD/:/var/www/back
+    networks:
+      - quiz
+
+  redis:
+    image: redis:alpine
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - quiz-redis:/data:delegated
+    restart: unless-stopped
+    mem_limit: 1000m
+    networks:
+      - quiz
+
+  mysql:
+    image: mysql:8.0.23
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - quiz-mysql:/var/lib/mysql:delegated
+    ports:
+      - ${DB_PORT:-3306}:${DB_PORT:-3306}
+    networks:
+      - quiz
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - app
+    restart: always
+    ports:
+      - 4343:4343
+    container_name: nginx
+    volumes:
+      - $PWD/docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - $PWD/:/var/www/back
+    networks:
+      - quiz
