@@ -6,6 +6,7 @@ namespace App\Services;
 use App\DTO\QuestionDTO;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class QuestionService extends BaseService
 {
@@ -67,5 +68,19 @@ class QuestionService extends BaseService
     public function delete(int $id): bool
     {
         return (bool)Question::query()->whereKey($id)->delete();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getCorrectAnswers(array $ids): Collection
+    {
+        return Question::query()
+            ->whereIn('id', $ids)
+            ->select(['id', 'title', 'correct_answer'])
+            ->get()
+            ->keyBy('id');
     }
 }

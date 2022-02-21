@@ -14,7 +14,7 @@ class QuestionDTO extends EntityDTO
     /** @var string $title */
     public string $title;
 
-    #[StringList([QuestionTypeEnum::STRING, QuestionTypeEnum::INTEGER])]
+    #[StringList([QuestionTypeEnum::TEXT, QuestionTypeEnum::NUMBER])]
     public string $type;
 
     /** @var string|null $correct_answer */

@@ -5,6 +5,6 @@ namespace App\Enums;
 
 class QuestionTypeEnum extends AbstractEnum
 {
-    public const STRING = 'string';
-    public const INTEGER = 'integer';
+    public const TEXT = 'text';
+    public const NUMBER = 'number';
 }

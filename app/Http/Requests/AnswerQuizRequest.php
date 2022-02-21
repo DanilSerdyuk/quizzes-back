@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\QuestionTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreQuizRequest extends FormRequest
+class AnswerQuizRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,18 +19,13 @@ class StoreQuizRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @throws \ReflectionException
-     *
      * @return array
      */
     public function rules(): array
     {
         return [
-            'title' => 'string|required|min:3|max:255|unique:quizzes,title',
-            'questions' => 'required|array',
-            'questions.*.type' => 'required|in:' . QuestionTypeEnum::implode(),
-            'questions.*.title' => 'required|string',
-            'questions.*.correct_answer' => 'required',
+            'answers' => 'required|array',
+            'answers.*' => 'max:255',
         ];
     }
 }

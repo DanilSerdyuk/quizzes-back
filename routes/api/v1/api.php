@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AnswerController;
+use App\Http\Controllers\Api\QuestionController;
+use App\Http\Controllers\Api\QuizController;
+use App\Http\Controllers\Api\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +18,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::apiResource('quizzes', \App\Http\Controllers\Api\QuizController::class);
-    Route::post('quizzes/assignee', [\App\Http\Controllers\Api\QuizController::class, 'assignee']);
-    Route::apiResource('questions', \App\Http\Controllers\Api\QuestionController::class)
+    /// QUIZZES ///
+    Route::apiResource('quizzes', QuizController::class);
+    Route::post('quizzes/assignee', [QuizController::class, 'assignee']);
+    Route::get('quizzes/show/{id}', [QuizController::class, 'showById']);
+
+    /// QUESTIONS ///
+    Route::apiResource('questions', QuestionController::class)
         ->only(['store', 'update', 'destroy']);
+
+    /// QUESTIONS ///
+    Route::group(['prefix' => 'users', 'controller' => UsersController::class], function () {
+        Route::get('/', 'index');
+    });
+
+    /// ANSWERS ///
+    Route::group(['prefix' => 'answers', 'controller' => AnswerController::class], function () {
+        Route::post('/', 'addAnswers');
+    });
 });

@@ -18,6 +18,11 @@ class Quiz extends Model
     /** @var string $table */
     protected $table = 'quizzes';
 
+    /** @var string[] $casts */
+    protected $casts = [
+        'created_at' => 'datetime:M j, Y'
+    ];
+
     /**
      * Return the sluggable configuration array for this model.
      *

@@ -27,7 +27,7 @@ class QuestionFactory extends Factory
             'type' => $type,
             'title' => $this->faker->text,
             'quiz_id' => Quiz::all()->pluck('id')->random(),
-            'correct_answer' => $type === \App\Enums\QuestionTypeEnum::STRING ? 'correct' : 1,
+            'correct_answer' => $type === \App\Enums\QuestionTypeEnum::TEXT ? 'this is correct value' : 1,
         ];
     }
 }

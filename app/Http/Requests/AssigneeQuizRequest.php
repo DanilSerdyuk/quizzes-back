@@ -25,6 +25,7 @@ class AssigneeQuizRequest extends FormRequest
     {
         return [
             'url' => 'string|required|min:5|max:255|unique:quizzes,title',
+            'quiz_id' => 'required|exists:quizzes,id',
             'users' => 'required|array',
             'users.*' => 'required|exists:users,id'
         ];

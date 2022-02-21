@@ -33,7 +33,11 @@ class QuizController extends Controller
     public function index(Request $request): JsonResponse
     {
         return ResponseJson::responseJson(
-            $this->service->get($request->get('perPage', 10), $request->get('page', 1))
+            $this->service->get(
+                $request->get('perPage', 10),
+                $request->get('page', 1),
+                $request->get('q'),
+            )
         );
     }
 
@@ -64,6 +68,18 @@ class QuizController extends Controller
     public function show(string $slug): JsonResponse
     {
         return ResponseJson::responseJson(new QuizResource($this->service->show($slug)));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return JsonResponse
+     */
+    public function showById(int $id): JsonResponse
+    {
+        return ResponseJson::responseJson(new QuizResource($this->service->getById($id)));
     }
 
     /**

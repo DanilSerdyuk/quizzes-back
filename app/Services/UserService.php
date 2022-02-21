@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class UserService
 {
@@ -31,10 +32,20 @@ class UserService
     private function assigneeRoles(User $user, array $payload): void
     {
         if (!array_key_exists('roles', $payload)) {
-            //by default
+            //by default, need add roles logic
             $user->assignRole(RoleEnum::STUDENT);
         } else {
             $user->assignRole($payload['roles']);
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getStudents(): Collection
+    {
+        return User::query()
+            ->whereHas('roles', fn($q) => $q->where('name', '!=', RoleEnum::ADMIN))
+            ->get();
     }
 }
