@@ -15,7 +15,7 @@
 2. Run init: `make init`
 
 ### Run via docker-compose:
-1. `docker-compose --build -d`
+1. `docker-compose up --build -d`
 
 2. `docker-compose exec -T app composer install`
    

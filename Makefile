@@ -1,7 +1,7 @@
 up:
 	- docker-compose up -d
 build:
-	- docker-compose --build -d
+	- docker-compose up --build -d
 down:
 	- docker-compose down
 local-up:
